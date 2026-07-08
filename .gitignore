@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+
+# Local runtime data. Do not publish these to GitHub.
+data/
+uploads/
+public-share-url.txt
+
+# Generated Word/PDF reports can contain internal data.
+data/reports/
+
+# Keep GitHub Pages static export.
+!docs/
+!docs/**
+tools/

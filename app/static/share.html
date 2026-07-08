@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>指标完成情况只读分享</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/static/share.css?v=20260701c" />
+  </head>
+  <body>
+    <main class="share-shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">READ ONLY</p>
+          <h1 id="shareTitle">正在读取数据</h1>
+          <p id="shareSummary">请稍候。</p>
+        </div>
+        <div class="share-filters">
+          <a id="exportPdfButton" class="share-export-button" href="/api/share/pdf" download>
+            <span>导出 PDF</span>
+          </a>
+          <a id="pdfFallbackLink" class="share-pdf-fallback" href="/api/share/pdf?disposition=inline" target="_blank" rel="noopener">
+            下载无反应时，点这里打开 PDF
+          </a>
+          <label class="period-picker">
+            <span>结束期数</span>
+            <select id="monthSelect"></select>
+          </label>
+          <label class="period-picker">
+            <span>统计口径</span>
+            <select id="timeScopeSelect">
+              <option value="cumulative">累计</option>
+              <option value="since2021">2021年以来</option>
+              <option value="range">时间段</option>
+            </select>
+          </label>
+          <label id="shareStartField" class="period-picker">
+            <span>开始期数</span>
+            <select id="startMonthSelect"></select>
+          </label>
+        </div>
+      </section>
+
+      <section class="kpi-grid" aria-label="总体情况">
+        <article class="kpi-card">
+          <span>市级指标</span>
+          <strong id="cityCount">-</strong>
+        </article>
+        <article class="kpi-card good">
+          <span>已完成</span>
+          <strong id="doneCount">-</strong>
+        </article>
+        <article class="kpi-card warn">
+          <span>接近完成</span>
+          <strong id="warningCount">-</strong>
+        </article>
+        <article class="kpi-card bad">
+          <span>未完成</span>
+          <strong id="behindCount">-</strong>
+        </article>
+      </section>
+
+      <section class="share-section level-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">TECHNICIAN LEVELS</p>
+            <h2>技师专项统计</h2>
+          </div>
+          <span id="levelPeriod" class="readonly-pill">-</span>
+        </div>
+        <div id="levelStats" class="level-stats"></div>
+      </section>
+
+      <section class="share-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">CITY ROLLUP</p>
+            <h2>全市五项指标</h2>
+          </div>
+          <span class="readonly-pill">只读</span>
+        </div>
+        <div id="cityList" class="city-list"></div>
+      </section>
+
+      <section class="share-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">DISTRICTS</p>
+            <h2>各区两项任务</h2>
+          </div>
+        </div>
+        <p class="note">北岸为直管区+浦口区合计；直管区、浦口区同时单独保留。</p>
+        <div id="districtList" class="district-list"></div>
+      </section>
+
+      <section class="share-section ai-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">AI CERTIFICATES</p>
+            <h2>各区人工智能类证书</h2>
+          </div>
+          <span id="aiCount" class="readonly-pill">-</span>
+        </div>
+        <div id="aiDistrictList" class="ai-district-list"></div>
+      </section>
+
+      <p class="footer-note">本页面为只读分享页，仅展示指标完成情况，不提供上传、修改、删除和下载权限。</p>
+    </main>
+
+    <script src="/static/share.js?v=20260701c"></script>
+  </body>
+</html>

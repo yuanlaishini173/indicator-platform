@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>指标完成情况平台</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/static/styles.css?v=20260624a" />
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true">
+      <symbol id="icon-upload" viewBox="0 0 24 24">
+        <path d="M12 3v12m0-12 4 4m-4-4-4 4M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />
+      </symbol>
+      <symbol id="icon-refresh" viewBox="0 0 24 24">
+        <path d="M20 12a8 8 0 0 1-14.7 4.4M4 12A8 8 0 0 1 18.7 7.6M4 17v-5h5m11-5v5h-5" />
+      </symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.8-3.8" />
+      </symbol>
+      <symbol id="icon-download" viewBox="0 0 24 24">
+        <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />
+      </symbol>
+      <symbol id="icon-filter" viewBox="0 0 24 24">
+        <path d="M4 5h16l-6 7v5l-4 2v-7L4 5Z" />
+      </symbol>
+      <symbol id="icon-chart" viewBox="0 0 24 24">
+        <path d="M5 19V9m7 10V5m7 14v-7" />
+      </symbol>
+      <symbol id="icon-file-text" viewBox="0 0 24 24">
+        <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z" />
+        <path d="M14 3v6h6M8 13h8M8 17h5" />
+      </symbol>
+      <symbol id="icon-table" viewBox="0 0 24 24">
+        <path d="M4 5h16v16H4zM4 10h16M4 15h16M10 5v16M16 5v16" />
+      </symbol>
+      <symbol id="icon-district" viewBox="0 0 24 24">
+        <path d="M5 20V8l5-3 5 3 4-2v12l-4 2-5-3-5 3Z" />
+        <path d="M10 5v12M15 8v12" />
+      </symbol>
+      <symbol id="icon-chevron-down" viewBox="0 0 24 24">
+        <path d="m6 9 6 6 6-6" />
+      </symbol>
+      <symbol id="icon-trash" viewBox="0 0 24 24">
+        <path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3" />
+      </symbol>
+      <symbol id="icon-edit" viewBox="0 0 24 24">
+        <path d="M4 20h4l11-11a2.8 2.8 0 0 0-4-4L4 16v4Z" />
+        <path d="m13 6 5 5" />
+      </symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4L19 6" />
+      </symbol>
+      <symbol id="icon-x" viewBox="0 0 24 24">
+        <path d="M6 6l12 12M18 6 6 18" />
+      </symbol>
+    </svg>
+
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">INDICATOR COMPLETION OPS</p>
+          <h1>指标完成情况平台</h1>
+        </div>
+        <form id="uploadForm" class="upload-strip">
+          <label class="field compact">
+            <span>截至月份</span>
+            <input id="uploadMonth" name="month" type="month" />
+          </label>
+          <label class="file-box" title="选择内网导出的 Excel 或 CSV">
+            <input id="fileInput" name="file" type="file" accept=".xlsx,.xls,.csv" />
+            <svg><use href="#icon-upload"></use></svg>
+            <span id="fileName">选择表格</span>
+          </label>
+          <button class="icon-button primary" type="submit" title="导入表格">
+            <svg><use href="#icon-upload"></use></svg>
+            <span>导入</span>
+          </button>
+          <a class="icon-button" href="/share" target="_blank" title="打开只读分享页">
+            <svg><use href="#icon-chart"></use></svg>
+            <span>分享页</span>
+          </a>
+        </form>
+      </header>
+
+      <main class="workspace">
+        <aside class="sidebar">
+          <div class="side-title">
+            <svg><use href="#icon-filter"></use></svg>
+            <span>筛选</span>
+          </div>
+          <label class="field">
+            <span>结束期数</span>
+            <select id="monthFilter"></select>
+          </label>
+          <label class="field">
+            <span>统计口径</span>
+            <select id="timeScopeFilter">
+              <option value="cumulative">累计</option>
+              <option value="since2021">2021年以来</option>
+              <option value="range">时间段</option>
+            </select>
+          </label>
+          <label id="startMonthField" class="field">
+            <span>开始期数</span>
+            <select id="startMonthFilter"></select>
+          </label>
+          <label class="field">
+            <span>区域</span>
+            <select id="districtFilter"></select>
+          </label>
+          <label class="field">
+            <span>指标类别</span>
+            <select id="categoryFilter"></select>
+          </label>
+          <label class="field">
+            <span>完成状态</span>
+            <select id="statusFilter"></select>
+          </label>
+          <label class="field search-field">
+            <span>关键词</span>
+            <div>
+              <svg><use href="#icon-search"></use></svg>
+              <input id="queryInput" type="search" placeholder="指标、区域、类别" />
+            </div>
+          </label>
+          <button id="clearButton" class="icon-button full" type="button" title="清空筛选">
+            <svg><use href="#icon-refresh"></use></svg>
+            <span>清空</span>
+          </button>
+        </aside>
+
+        <section class="content">
+          <section class="insight-panel">
+            <div class="insight-copy">
+              <p class="eyebrow">CURRENT READOUT</p>
+              <h2 id="insightTitle">本期完成情况</h2>
+              <p id="insightText">正在读取本期指标完成情况。</p>
+              <div id="insightChips" class="insight-chips"></div>
+            </div>
+            <section class="summary-grid" aria-label="总体情况">
+              <article class="stat-card strong">
+                <span>全市任务</span>
+                <strong id="cityTaskCount">-</strong>
+                <small id="cityTaskStatus">-</small>
+              </article>
+              <article class="stat-card">
+                <span>区级任务</span>
+                <strong id="totalCount">-</strong>
+                <small id="totalNote">区级分解任务</small>
+              </article>
+              <article id="doneCard" class="stat-card good clickable" title="查看已完成任务">
+                <span>已完成</span>
+                <strong id="doneCount">-</strong>
+                <small>完成率 ≥ 100%</small>
+              </article>
+              <article id="warningCard" class="stat-card warn clickable" title="查看接近完成任务">
+                <span>接近完成</span>
+                <strong id="warningCount">-</strong>
+                <small>80% - 100%</small>
+              </article>
+              <article id="behindCard" class="stat-card bad clickable" title="查看未完成任务">
+                <span>未完成</span>
+                <strong id="behindCount">-</strong>
+                <small id="unknownCount">低于 80%</small>
+              </article>
+            </section>
+          </section>
+
+          <section class="panel report-panel action-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">ACTIONS</p>
+                <h2>生成报告与口径切换</h2>
+              </div>
+              <div class="report-actions">
+                <label class="field report-field">
+                  <span>报告周期</span>
+                  <select id="reportPeriod">
+                    <option value="month">月度</option>
+                    <option value="quarter">季度</option>
+                  </select>
+                </label>
+                <label class="field report-field">
+                  <span>时间口径</span>
+                  <select id="reportScope">
+                    <option value="cumulative">累计</option>
+                    <option value="single">单期</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <div class="report-card-grid" aria-label="报告下载">
+              <a id="downloadReport" class="report-card" href="#" title="下载分析报告" data-label="分析报告">
+                <span class="report-card-icon"><svg><use href="#icon-file-text"></use></svg></span>
+                <strong>分析报告</strong>
+                <small>图表与文字分析</small>
+                <svg class="download-mark"><use href="#icon-download"></use></svg>
+              </a>
+              <a id="downloadMonthlyReport" class="report-card" href="#" title="下载全市指标完成情况表" data-label="全市指标表">
+                <span class="report-card-icon"><svg><use href="#icon-table"></use></svg></span>
+                <strong>全市指标表</strong>
+                <small>五项市级指标</small>
+                <svg class="download-mark"><use href="#icon-download"></use></svg>
+              </a>
+              <a id="downloadQuarterReport" class="report-card" href="#" title="下载各区完成情况表" data-label="各区完成表">
+                <span class="report-card-icon"><svg><use href="#icon-district"></use></svg></span>
+                <strong>各区完成表</strong>
+                <small>两项区级任务</small>
+                <svg class="download-mark"><use href="#icon-download"></use></svg>
+              </a>
+            </div>
+            <div id="reportText" class="report-hint" aria-live="polite"></div>
+            <div id="publicShareBox" class="public-share-box" hidden>
+              <div>
+                <span>公网只读分享</span>
+                <strong id="publicShareUrl">正在生成链接</strong>
+                <small id="publicShareNote">供微信或外部电脑查看，不开放上传修改。</small>
+              </div>
+              <div class="public-share-actions">
+                <button id="checkPublicShare" class="icon-button" type="button" title="检测并更新公网分享链接">
+                  <svg><use href="#icon-refresh"></use></svg>
+                  <span>检测/更新</span>
+                </button>
+                <button id="copyPublicShare" class="icon-button" type="button" title="复制公网分享链接">
+                  <svg><use href="#icon-chart"></use></svg>
+                  <span>复制链接</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="dashboard-grid">
+            <article class="panel city-panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">CITY ROLLUP</p>
+                  <h2>全市五项指标</h2>
+                </div>
+                <svg><use href="#icon-chart"></use></svg>
+              </div>
+              <div id="cityList" class="city-list"></div>
+            </article>
+
+            <article class="panel level-panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">TECHNICIAN LEVELS</p>
+                  <h2>技师专项统计</h2>
+                </div>
+                <span id="levelPeriod" class="count-pill">-</span>
+              </div>
+              <div id="levelStats" class="level-stats"></div>
+            </article>
+
+            <article class="panel district-panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">DISTRICTS</p>
+                  <h2>各区两项任务</h2>
+                </div>
+              </div>
+              <p class="panel-note">北岸为直管区+浦口区合计；直管区、浦口区同时单独保留。</p>
+              <div id="districtBars" class="bar-list"></div>
+            </article>
+
+            <article class="panel ai-district-panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">AI CERTIFICATES</p>
+                  <h2>各区人工智能类证书</h2>
+                </div>
+                <span id="aiDistrictCount" class="count-pill">0 个</span>
+              </div>
+              <div id="aiDistrictList" class="ai-district-list"></div>
+            </article>
+          </section>
+
+          <section class="attention-grid" aria-label="工作关注项">
+            <article class="panel status-panel">
+              <div class="panel-head compact-head">
+                <div>
+                  <p class="eyebrow">DONE</p>
+                  <h2>已完成任务</h2>
+                </div>
+              </div>
+              <div id="doneList" class="status-list"></div>
+            </article>
+            <article class="panel status-panel">
+              <div class="panel-head compact-head">
+                <div>
+                  <p class="eyebrow">NEAR TARGET</p>
+                  <h2>接近完成任务</h2>
+                </div>
+              </div>
+              <div id="warningList" class="status-list"></div>
+            </article>
+            <article class="panel upload-panel">
+              <div class="panel-head compact-head">
+                <div>
+                  <p class="eyebrow">UPLOADS</p>
+                  <h2>已上传文件</h2>
+                </div>
+                <span id="uploadCount" class="count-pill">0 个</span>
+              </div>
+              <div id="uploadList" class="upload-list"></div>
+            </article>
+          </section>
+
+          <section class="panel table-panel collapsed">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">DETAILS</p>
+                <h2>指标明细查询</h2>
+              </div>
+              <div class="table-actions">
+                <span id="tableCount" class="count-pill">0 条</span>
+                <button id="toggleDetails" class="icon-button detail-toggle" type="button" aria-expanded="false" title="展开或收起指标明细">
+                  <svg><use href="#icon-chevron-down"></use></svg>
+                  <span>展开</span>
+                </button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>区域</th>
+                    <th>指标</th>
+                    <th>类别</th>
+                    <th>目标</th>
+                    <th>完成</th>
+                    <th>完成率</th>
+                    <th>状态</th>
+                  </tr>
+                </thead>
+                <tbody id="metricTable"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel trace-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">TRACEABILITY</p>
+                <h2>指标计算来源与追溯</h2>
+              </div>
+            </div>
+            <div class="trace-grid">
+              <article class="trace-card">
+                <strong>1. 新增取证人数（万人次）</strong>
+                <p>来源：技能等级认定统计表，按区/全市“取证数合计”。</p>
+                <p>过程：全市取“合计”行取证数合计 ÷ 10000；各区取对应地区取证数合计 ÷ 10000。</p>
+              </article>
+              <article class="trace-card">
+                <strong>2. 高级工以上取证人数（人次）</strong>
+                <p>来源：技能等级认定统计表中的等级取证字段。</p>
+                <p>过程：三级取证数 + 二级取证数 + 一级取证数 + 特级技师取证数 + 首席技师取证数。</p>
+              </article>
+              <article class="trace-card">
+                <strong>3. 技师以上取证人数（人次）</strong>
+                <p>来源：技能等级认定统计表中的高等级取证字段。</p>
+                <p>过程：二级取证数 + 一级取证数 + 特级技师取证数 + 首席技师取证数。</p>
+              </article>
+              <article class="trace-card">
+                <strong>4. 专业技能人才取证人数（人）</strong>
+                <p>来源：业务确认后的专项口径，目前在页面卡片中手工填入。</p>
+                <p>过程：填入当期累计完成数后，系统按目标 580 人自动计算完成率。</p>
+              </article>
+              <article class="trace-card">
+                <strong>5. 人工智能类取证人数（人次）</strong>
+                <p>来源：按区输出——人工智能类统计表。</p>
+                <p>过程：汇总该专项表“取证数合计”，只计入市级人工智能指标，不生成区级分解任务。</p>
+              </article>
+              <article class="trace-card">
+                <strong>地区口径处理</strong>
+                <p>南京经济技术开发区并入栖霞区；江北新区按直管区处理；浦口区单独保留。</p>
+                <p>北岸 = 直管区 + 浦口区；无效内网地区不参与统计。</p>
+              </article>
+              <article class="trace-card">
+                <strong>时间段与技师专项</strong>
+                <p>累计口径直接取所选结束期数的累计快照；时间段口径 = 结束期数累计数 - 开始期数前一月累计数。</p>
+                <p>特级/特技技师、首席技师分别取对应取证数字段；两种“特级/特技”写法均兼容。</p>
+              </article>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/static/app.js?v=20260701a"></script>
+  </body>
+</html>

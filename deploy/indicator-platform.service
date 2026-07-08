@@ -1,0 +1,16 @@
+[Unit]
+Description=Indicator Completion Platform
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/indicator-platform
+EnvironmentFile=/etc/indicator-platform.env
+ExecStart=/opt/indicator-platform/.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8020
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
